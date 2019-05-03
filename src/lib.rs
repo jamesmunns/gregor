@@ -8,13 +8,14 @@ mod num;
 mod time_zones;
 
 use core::fmt;
-use num::positive_rem;
+use crate::num::positive_rem;
+use serde::{Serialize, Deserialize};
 use time_zones::days_since_unix;
 pub use time_zones::{TimeZone, LocalTimeConversionError, UnambiguousTimeZone, DaylightSaving,
                      Utc, FixedOffsetFromUtc, CentralEurope};
 
 /// In seconds since 1970-01-01 00:00:00 UTC.
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Copy, Clone)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Copy, Clone, Serialize, Deserialize)]
 pub struct UnixTimestamp(pub i64);
 
 #[derive(Eq, PartialEq, Ord, PartialOrd, Copy, Clone)]
@@ -24,7 +25,7 @@ pub struct DateTime<Tz: TimeZone> {
 }
 
 /// A date and time without associated time zone information.
-#[derive(Eq, PartialEq, Ord, PartialOrd, Copy, Clone)]
+#[derive(Eq, PartialEq, Ord, PartialOrd, Copy, Clone, Serialize, Deserialize)]
 pub struct NaiveDateTime {
     /// Year number per ISO 8601.
     ///
@@ -87,7 +88,7 @@ impl<Tz: TimeZone> DateTime<Tz> {
 
     pub fn convert_time_zone<NewTz: TimeZone>(&self, new_time_zone: NewTz)
                                               -> Result<DateTime<NewTz>, LocalTimeConversionError> {
-        Ok(DateTime::from_timestamp(try!(self.to_timestamp()), new_time_zone))
+        Ok(DateTime::from_timestamp(self.to_timestamp()?, new_time_zone))
     }
 }
 
@@ -168,7 +169,7 @@ macro_rules! declare_month {
         $first_day_in_leap_years: expr,
         $last_day_in_leap_years: expr
     )),+ ]) => {
-        #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Copy, Clone)]
+        #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Copy, Clone, Serialize, Deserialize)]
         pub enum Month {
             $(
                 $name = $number,

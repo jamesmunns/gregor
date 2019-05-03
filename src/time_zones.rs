@@ -1,6 +1,6 @@
 use core::fmt;
 use super::{NaiveDateTime, DateTime, UnixTimestamp, Month, DayOfTheWeek};
-use num::{div_floor, positive_rem};
+use crate::num::{div_floor, positive_rem};
 
 pub trait TimeZone {
     fn from_timestamp(&self, t: UnixTimestamp) -> NaiveDateTime;
