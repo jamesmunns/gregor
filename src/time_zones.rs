@@ -78,7 +78,7 @@ impl TimeZone for Utc {
 /// use gregor::FixedOffsetFromUtc;
 /// let jst = FixedOffsetFromUtc::from_hours_and_minutes(9, 0);
 /// ```
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Default)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, Default, Deserialize, Serialize)]
 pub struct FixedOffsetFromUtc {
     seconds_ahead_of_utc: i32,
 }
